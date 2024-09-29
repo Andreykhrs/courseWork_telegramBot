@@ -18,7 +18,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-import static org.springframework.test.util.AssertionErrors.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class NotificationServiceImplTest {
@@ -47,8 +52,8 @@ public class NotificationServiceImplTest {
         out.parseMessage("10.06.2023 22:22 тест");
         //assert
         assertTrue(
-                notificationsRepository
-                findAll().stream().anyMatch(s -> s.getMessage().equals(expected.getMessage()));
+                notificationsRepository.
+                findAll().stream().anyMatch(s -> s.getMessage().equals(expected.getMessage())));
     }
 
     @Test
@@ -77,8 +82,8 @@ public class NotificationServiceImplTest {
         out.sendMessage(notification);
 
         verify(telegramBot).execute(messageCaptor.capture());
-        sendMessage value = messageCaptor.getValue();
-        assertEquals("тест", value.getParametrs().get("text"));
-        assertEquals(1L, value.getParametrs().get("chat_id"));
+        SendMessage value = messageCaptor.getValue();
+        assertEquals("тест", value.getParameters().get("text"));
+        assertEquals(1L, value.getParameters().get("chat_id"));
     }
 }

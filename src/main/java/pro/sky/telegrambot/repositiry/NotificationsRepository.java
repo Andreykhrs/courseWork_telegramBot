@@ -7,7 +7,7 @@ import pro.sky.telegrambot.model.Notification;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
+
 public interface NotificationsRepository extends JpaRepository<Notification, Long> {
 
     List<Notification> findByNotificationDate(LocalDateTime dateTime);

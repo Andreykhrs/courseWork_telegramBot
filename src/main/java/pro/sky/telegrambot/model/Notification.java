@@ -11,6 +11,7 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    @Column(name = "chatid")
     private Long chatId;
 
     private String message;
@@ -39,7 +40,7 @@ public class Notification {
     }
 
     public String getMessage() {
-        return getMessage();
+        return this.message;
     }
 
     public LocalDateTime getNotificationDate() {
@@ -51,7 +52,7 @@ public class Notification {
     }
 
     public NotificationStatus getStatus() {
-        return getStatus();
+        return this.status;
     }
 
     public void setAsSent() {

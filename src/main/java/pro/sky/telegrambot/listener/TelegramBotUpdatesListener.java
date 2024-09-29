@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pro.sky.telegrambot.exception.IncorrectMessageException;
+import pro.sky.telegrambot.model.Notification;
+import pro.sky.telegrambot.service.NotificationService;
 
 import javax.annotation.PostConstruct;
-import javax.management.Notification;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static pro.sky.telegrambot.util.ComandCost.*;
 
 @Service
 @EnableScheduling
@@ -30,8 +34,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         this.telegramBot = telegramBot;
     }
 
-    @Autowired
-    private TelegramBot telegramBot;
 
     @PostConstruct
     public void init() {
@@ -51,14 +53,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
             if (message.text().startsWith(START_CMD)) {
                 logger.info(START_CMD + " " + LocalDateTime.now());
-                notificationService.sendMessage(getChatId(message), WELCOM + message.from().firstName() + " ");
-                notificationService.sendMessage(message), HELP_MSG);
+                notificationService.sendMessage(getChatId(message), WELCOME + message.from().firstName() + " ");
+                notificationService.sendMessage(getChatId(message), HELP_MSG);
             } else {
                 try {
                     notificationService
                             .parseMessage(message.text())
                             .ifPresentOrElse(
-                                    task -> sheduledNotification(getChatId(message), task),
+                                    task -> scheduledNotification(getChatId(message), task),
                                     () -> notificationService.sendMessage(getChatId(message), INVALID_MESSAGE)
                             );
                 } catch (IncorrectMessageException e) {
